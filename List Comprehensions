@@ -1,0 +1,26 @@
+	defmodule BoutiqueSuggestions do
+	  def get_combinations(tops, bottoms) do
+		# Please implement the get_combinations/3 function
+		for x <- tops,
+		  y <- bottoms, 
+		  x.base_color != y.base_color and x.price + y.price < 100 do
+			{x, y}
+		end
+	  end
+	  def get_combinations(tops, bottoms, options) do
+		# Please implement the get_combinations/3 function
+		max_price = 
+		  case Keyword.fetch(options,:maximum_price) do
+		   {:ok, value} ->
+			value
+		  _ ->
+			100
+		  end
+
+		for x <- tops,
+		  y <- bottoms,
+		  x.price + y.price < max_price do
+			{x, y}
+		end
+	  end
+	end
