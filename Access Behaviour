@@ -1,0 +1,17 @@
+	defmodule BasketballWebsite do
+	  def extract_from_path(data, path, array \\ nil) do
+		# Please implement the extract_from_path/2 function
+		pahtst= if array == nil, do: String.split(path, "."), else: array
+		if length(pahtst) != 0 do
+		  [head | tail] = pahtst
+		  extract_from_path(data[head],path, tail)
+		else
+		  data
+		end
+	  end
+
+	  def get_in_path(data, path) do
+		# Please implement the get_in_path/2 function
+		get_in(data, String.split(path, ".")  )
+	  end
+	end
