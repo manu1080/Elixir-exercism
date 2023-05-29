@@ -1,0 +1,37 @@
+	defmodule Newsletter do
+	  def read_emails(path) do
+		# Please implement the read_emails/1 function
+		{_,data}= File.read(path)
+		String.split(data)
+	  end
+
+	  def open_log(path) do
+		# Please implement the open_log/1 function
+		{_,pid}= File.open(path,[:read, :write])
+		pid
+	  end
+
+	  def log_sent_email(pid, email) do
+		IO.puts(pid, email)
+	  end
+
+	  def close_log(pid) do
+		# Please implement the close_log/1 function
+		File.close(pid)
+	  end
+
+	  def send_newsletter(emails_path, log_path, send_fun) do
+		# Please implement the send_newsletter/3 function
+		emails = read_emails(emails_path)
+		pid = open_log(log_path)
+		Enum.each(emails, fn email ->    
+		  IO.puts("Procesando correo electrónico: #{email}")
+		  case send_fun.(email) do
+			:ok -> log_sent_email(pid,email)
+			_ ->
+		  end
+		end)
+		close_log(pid)
+
+	  end
+	end
