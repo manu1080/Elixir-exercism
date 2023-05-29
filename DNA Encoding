@@ -1,0 +1,38 @@
+	defmodule DNA do
+	  def encode_nucleotide(? ), do: 0
+	  def encode_nucleotide(?A), do: 1
+	  def encode_nucleotide(?C), do: 2
+	  def encode_nucleotide(?G), do: 4
+	  def encode_nucleotide(?T), do: 8
+
+	  def decode_nucleotide(0), do: ? 
+	  def decode_nucleotide(1), do: ?A
+	  def decode_nucleotide(2), do: ?C
+	  def decode_nucleotide(4), do: ?G
+	  def decode_nucleotide(8), do: ?T
+
+	  def encode(dna) do
+		to_charlist(dna)
+		|> do_encode(<<>>) 
+	  end
+
+	  defp do_encode([], count), do: count
+	  defp do_encode([char | rest], count), do: do_encode(rest, <<count::bitstring, encode_nucleotide(char)::4>>)
+
+	  def decode(dna) do
+		do_decode(dna, []) 
+		|> reverse
+	  end
+
+	  defp do_decode(<<>>, count), do: count
+	  defp do_decode(<<ele :: 4, rest :: bitstring>>, count) do
+		nucleotide = decode_nucleotide(ele)
+		do_decode(rest, [nucleotide | count])
+	  end
+
+	  defp reverse(list) do
+		reverse_new(list, [])
+	  end
+	  defp reverse_new([], count), do: count
+	  defp reverse_new([head | tail], count), do: reverse_new(tail, [head | count])
+	end
