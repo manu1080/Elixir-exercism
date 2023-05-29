@@ -1,0 +1,30 @@
+	defmodule RPNCalculator.Exception do
+	  # Please implement DivisionByZeroError here.
+	  defmodule DivisionByZeroError do
+		defexception message: "division by zero occurred"
+	  end
+
+	  # Please implement StackUnderflowError here.
+	  defmodule StackUnderflowError do
+		defexception message: "stack underflow occurred"
+	  
+		@impl true
+		def exception(value) do
+		  msg = if value == [] or value == nil, do: "stack underflow occurred", else: "stack underflow occurred, context: #{value}"
+		  %RPNCalculator.Exception.StackUnderflowError{message: msg}
+		end 
+
+		#defguard is_even(value) when is_integer(value) and rem(value, 2) == 0
+	  
+	  end
+	  def divide(list) do
+	   case list do
+		  [divisor, dividend] ->
+			case divisor do
+			  0 -> raise RPNCalculator.Exception.DivisionByZeroError
+			  _ -> dividend / divisor
+			end
+			_ -> raise RPNCalculator.Exception.StackUnderflowError, "when dividing"
+		end
+	  end
+	end    
