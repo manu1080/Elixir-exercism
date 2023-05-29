@@ -1,0 +1,59 @@
+	defmodule DancingDots.Animation do
+	  @type dot :: DancingDots.Dot.t()
+	  @type opts :: keyword
+	  @type error :: any
+	  @type frame_number :: pos_integer
+
+	  # Please implement the module
+
+	  @callback init(opts :: keyword) :: {:ok, opts :: keyword} | {:error, error :: any}
+	  defmacro __using__(_) do
+		quote do
+		  @behaviour DancingDots.Animation
+		  def init(opts), do: {:ok, opts} 
+		  defoverridable init: 1
+		end
+	  end
+	  @callback handle_frame(dot :: DancingDots.Dot.t(), frame_number :: pos_integer, options :: any) :: dot :: DancingDots.Dot.t()
+	end
+
+	defmodule DancingDots.Flicker do
+	  # Please implement the module
+	  require DancingDots.Animation
+	  DancingDots.Animation.__using__(async: true)
+
+	  @behaviour DancingDots.Animation
+	  def handle_frame(dot, frame_number, options)do
+		case rem(frame_number, 4) do
+		   0 ->
+			%DancingDots.Dot{dot | opacity: dot.opacity / 2}
+		  _ ->  dot
+		  
+		end
+	  end
+	  defoverridable handle_frame: 3
+
+	end
+
+	defmodule DancingDots.Zoom do
+	  # Please implement the module
+	  require DancingDots.Animation
+	  DancingDots.Animation.__using__(async: true)
+
+	  @behaviour DancingDots.Animation
+		def init([velocity: velocity]= opts) when is_number(velocity), do: {:ok, opts}
+		def init([]), do: {:error, "The :velocity option is required, and its value must be a number. Got: nil"}
+		def init([velocity: velocity]= opts), do: {:error, "The :velocity option is required, and its value must be a number. Got: #{inspect(velocity)}"}
+		defoverridable init: 1
+
+		@behaviour DancingDots.Animation
+		def handle_frame(dot, frame_number, [velocity: velocity]= options) do
+		  case frame_number != 1 do
+			true -> %DancingDots.Dot{dot | radius: dot.radius + (frame_number - 1) * velocity}
+			_ ->  dot
+			
+			end
+		end
+		defoverridable handle_frame: 3
+
+	end
